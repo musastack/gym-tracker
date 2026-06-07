@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
+const USERNAME_MAP = {
+  mo: 'mo@gymtracker.app',
+}
+
 export default function Auth() {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -11,8 +15,16 @@ export default function Auth() {
     e.preventDefault()
     setLoading(true)
     setError('')
+
+    const email = USERNAME_MAP[username.trim().toLowerCase()]
+    if (!email) {
+      setError('Unknown username.')
+      setLoading(false)
+      return
+    }
+
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setError(error.message)
+    if (error) setError('Invalid username or password.')
     setLoading(false)
   }
 
@@ -38,13 +50,14 @@ export default function Auth() {
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', color: '#666', marginBottom: '8px' }}>Email</label>
+            <label style={{ display: 'block', fontSize: '13px', color: '#666', marginBottom: '8px' }}>Username</label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Mo"
               required
+              autoCapitalize="none"
               style={inputStyle}
             />
           </div>
