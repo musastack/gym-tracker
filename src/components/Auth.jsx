@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 
 const USERNAME_MAP = {
   mo: 'mo@gymtracker.app',
+  eyman: 'eyman@gymtracker.app',
 }
 
 export default function Auth() {
