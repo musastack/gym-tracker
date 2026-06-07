@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { getDay } from '../lib/workoutData'
+import { useRoutine } from '../lib/routineContext'
 import { BottomNav } from './Dashboard'
 
 const glass = {
@@ -12,6 +12,7 @@ const glass = {
 
 export default function History({ session }) {
   const navigate = useNavigate()
+  const { getDay } = useRoutine()
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
   const [expanded, setExpanded] = useState(null)

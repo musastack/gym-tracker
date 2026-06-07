@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { WORKOUT_DAYS, getTotalSets } from '../lib/workoutData'
+import { useRoutine } from '../lib/routineContext'
 
 function BottomNav({ active, onSignOut }) {
   const navigate = useNavigate()
@@ -41,6 +41,7 @@ export { BottomNav }
 
 export default function Dashboard({ session }) {
   const navigate = useNavigate()
+  const { routine, getTotalSets, routineLoading } = useRoutine()
   const [recentSessions, setRecentSessions] = useState([])
 
   useEffect(() => {
@@ -61,6 +62,8 @@ export default function Dashboard({ session }) {
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
 
+  if (routineLoading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}><div className="spinner" /></div>
+
   return (
     <div style={{ minHeight: '100vh', paddingBottom: '90px' }}>
       <div style={{ padding: '36px 20px 0' }}>
@@ -74,12 +77,17 @@ export default function Dashboard({ session }) {
       </div>
 
       <div style={{ padding: '28px 16px 0' }}>
-        <p style={{ fontSize: '11px', fontWeight: 700, color: '#444', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '14px', paddingLeft: '4px' }}>
-          Weekly Routine
-        </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', paddingLeft: '4px' }}>
+          <p style={{ fontSize: '11px', fontWeight: 700, color: '#444', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            Weekly Routine
+          </p>
+          <button onClick={() => navigate('/routine')} style={{ background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.2)', borderRadius: '8px', color: '#a855f7', fontSize: '12px', fontWeight: 700, padding: '6px 12px', cursor: 'pointer' }}>
+            Edit Routine
+          </button>
+        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {WORKOUT_DAYS.map((day) => {
+          {(routine || []).map((day) => {
             const last = lastFor(day.day)
             const prog = last ? getProgress(last) : null
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { getDay, getTotalSets } from '../lib/workoutData'
+import { useRoutine } from '../lib/routineContext'
 
 const glass = {
   background: 'rgba(255,255,255,0.04)',
@@ -21,6 +21,7 @@ const inputStyle = (done) => ({
 export default function WorkoutSession({ session }) {
   const { dayNumber } = useParams()
   const navigate = useNavigate()
+  const { getDay, getTotalSets } = useRoutine()
   const day = getDay(parseInt(dayNumber))
 
   const [workoutSession, setWorkoutSession] = useState(null)
